@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -34,8 +36,17 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        // Customize Exception Message API 404 Error
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            if ($request->wantsJson()) {
+                return response()->json(['message' => 'Object not found'], 404);
+            }
         });
+    }
+
+    // Customize validation exception to uniform
+    protected function invalidJson($request, ValidationException $exception)
+    {
+        return response()->json(['message' => collect($exception->errors())->first()[0]], 200);
     }
 }
