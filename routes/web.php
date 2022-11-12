@@ -14,5 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+//    $menus = \App\Models\Menu::with('children.children.children')->root()->get();
+    $menus = \App\Models\Menu::tree();
+
+    return view('welcome', [
+        'menus' => $menus
+    ]);
 });
