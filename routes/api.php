@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Dashboard\ItemController;
 use App\Http\Controllers\Api\Dashboard\MenuController;
+use App\Http\Controllers\Api\Frontend\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,3 +19,6 @@ use Illuminate\Support\Facades\Route;
 Route::Resource('menus', MenuController::class);
 
 Route::Resource('items', ItemController::class);
+
+Route::get('menus-tree', [HomeController::class, 'menusTree']);
+Route::get('items-selected', [HomeController::class, 'itemsSelected']);
