@@ -55,8 +55,8 @@ class MenuController extends Controller
         // Prevent update if the TYPE is changed and the menu HAS children (menus or items)
         $TypeIsChanged = $request->type != $menu->type;
         if ($TypeIsChanged) {
-            $menuHasChildrenMenu  = $menu->children->count() > 0;
-            $menuHasChildrenItem = $menu->items->count() > 0;
+            $menuHasChildrenMenu  = $menu->children->isNotEmpty();
+            $menuHasChildrenItem = $menu->items->isNotEmpty();
             if ($menuHasChildrenMenu  or $menuHasChildrenItem) {
                 return response()->json(['message' => 'The menu cannot be update. It is not possible to change the (type) of menu that has children.']);
             }
@@ -93,7 +93,7 @@ class MenuController extends Controller
 
     public function destroy(Menu $menu)
     {
-        $menuHasChildrenMenu  = $menu->children->count() > 0;
+        $menuHasChildrenMenu  = $menu->children->isNotEmpty();
         // Prevent destroy if the menu has children menu
         if ($menuHasChildrenMenu ) {
             return response()->json(['message' => 'The menu has children Menu cannot be deleted']);
