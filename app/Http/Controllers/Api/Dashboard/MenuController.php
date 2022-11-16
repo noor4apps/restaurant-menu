@@ -70,25 +70,13 @@ class MenuController extends Controller
             return response()->json(['message' => 'The menu cannot be update. The parent menu only accepts the items.']);
         }
 
+        // When a menu is updated, the affected children are updated
         // Query about the children Who inherit the discount
-        $child = Menu::where('menu_id', $menu->id)->where('discount', $menu->discount)->get();
+        Menu::tree($menu->id);
         // Collection of the affected children
-        $affectedArray = array();
+        $affectedArray = collect(Menu::$affectedArray)->values();
 
-        foreach ($child as $SubChild) {
-            $subChild = Menu::where('menu_id', $SubChild->id)->where('discount', $SubChild->discount)->get();
-            $affectedArray[] = $SubChild->id;
-
-            foreach ($subChild as $SubSubChild) {
-                $subChild = Menu::where('menu_id', $SubSubChild->id)->where('discount', $SubSubChild->discount)->get();
-                $affectedArray[] = $SubSubChild->id;
-
-                foreach ($subChild as $SubSubSubChild) {
-                    $affectedArray[] = $SubSubSubChild->id;
-                }
-            }
-        }
-        // Update the affected submenus
+        // Update the affected children (submenus)
         DB::table('menus')->whereIn('id', $affectedArray)
             ->update(['discount' => $request->discount]);
         // Update affected items

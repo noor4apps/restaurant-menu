@@ -26,23 +26,32 @@ class Menu extends Model
         return $this->belongsTo(self::class, 'menu_id');
     }
 
-    public static function tree()
+    static $affectedArray = array();
+
+    public static function tree($id = null)
     {
         $allMenus = Menu::get();
-        $rootMenus = $allMenus->whereNull('menu_id');
 
-        self::formatTree($rootMenus,$allMenus);
+        if (!is_null($id)) {
+            $rootMenus = $allMenus->where('id', $id);
+        } else {
+            $rootMenus = $allMenus->whereNull('menu_id');
+        }
 
+        self::formatTree($rootMenus, $allMenus, $id);
         return $rootMenus;
     }
 
-    private static function formatTree($menus, $allMenus)
+    private static function formatTree($menus, $allMenus, $id = null)
     {
         foreach ($menus as $menu) {
-            $menu->children = $allMenus->where('menu_id', $menu->id)->values();
+            if (!is_null($id)) {
+                $menu->children = $allMenus->where('menu_id', $menu->id)->where('discount', $menu->discount);
+                self::$affectedArray[] = $menu->id;
+            }
 
-            if($menu->children->isNotEmpty()) {
-                self::formatTree($menu->children, $allMenus);
+            if ($menu->children->isNotEmpty()) {
+                self::formatTree($menu->children, $allMenus, $id);
             }
         }
     }
