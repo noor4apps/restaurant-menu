@@ -19,6 +19,7 @@ class ItemResource extends JsonResource
             'name' => $this->name,
             'discount' => $this->discount,
             'price' => $this->price,
+            'menu_id' => $this->menu_id,
             'menu' => new MenuResource($this->whenLoaded('menu')),
         ];
     }

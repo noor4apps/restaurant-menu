@@ -19,7 +19,7 @@ class MenuResource extends JsonResource
             'name' => $this->name,
             'discount' => $this->discount,
             'type' => $this->type,
-//            'menu_id' => $this->menu_id,
+            'menu_id' => $this->menu_id,
             'menu' => new MenuResource($this->whenLoaded('parent')),
         ];
     }
