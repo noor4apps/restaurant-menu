@@ -47,6 +47,6 @@ class Handler extends ExceptionHandler
     // Customize validation exception to uniform
     protected function invalidJson($request, ValidationException $exception)
     {
-        return response()->json(['message' => collect($exception->errors())->first()[0]], 200);
+        return response()->json(['errors' => $exception->errors()], 422);
     }
 }
