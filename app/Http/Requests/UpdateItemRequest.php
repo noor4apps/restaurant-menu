@@ -27,14 +27,14 @@ class UpdateItemRequest extends FormRequest
 
         if ($method == 'PUT') {
             return [
-                'name' => ['required'],
+                'name' => ['required', 'unique:items,name,' . $this->id],
                 'discount' => ['nullable'],
                 'price' => ['required'],
                 'menu_id' => ['required', 'exists:menus,id'],
             ];
         } else {
             return [
-                'name' => ['sometimes', 'required'],
+                'name' => ['sometimes', 'required', 'unique:items,name,' . $this->id],
                 'discount' => ['nullable'],
                 'price' => ['sometimes', 'required'],
                 'menu_id' => ['sometimes', 'required', 'exists:menus,id'],

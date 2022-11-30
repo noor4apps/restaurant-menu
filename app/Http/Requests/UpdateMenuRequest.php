@@ -28,14 +28,14 @@ class UpdateMenuRequest extends FormRequest
 
         if ($method == 'PUT') {
             return [
-                'name' => ['required'],
+                'name' => ['required', 'unique:menus,name,' . $this->id],
                 'discount' => ['nullable'],
                 'type' => ['required', Rule::in(['category', 'item'])],
                 'menu_id' => ['nullable', 'exists:menus,id'],
             ];
         } else {
             return [
-                'name' => ['sometimes', 'required'],
+                'name' => ['sometimes', 'required','unique:menus,name,' . $this->id],
                 'discount' => ['nullable'],
                 'type' => ['sometimes', 'required', Rule::in(['category', 'item'])],
                 'menu_id' => ['nullable', 'exists:menus,id'],
