@@ -21,6 +21,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::Resource('menus', MenuController::class);
 
     Route::Resource('items', ItemController::class);
+
+    Route::Resource('users', UserController::class);
+
+    Route::get('me', [UserInfoController::class, 'me']);
 });
 
 Route::get('menus-tree', [HomeController::class, 'menusTree']);
